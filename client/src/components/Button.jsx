@@ -21,6 +21,7 @@ const Button = () => {
     });
 
     const [selectedFont, setSelectedFont] = useState(buttonStyles.fontFamily);
+    const [codeCopied, setCodeCopied] = useState(false);
 
     const handleChange = (e) => {
         const { name, value, type } = e.target;
@@ -58,9 +59,25 @@ const Button = () => {
         handleChange({ target: { name: 'fontFamily', value: selectedFont, type: 'text' } });
     };
 
+    const copyToClipboard = () => {
+        const cssCode = `
+            background-color: ${buttonStyles.backgroundColor};
+            border-radius: ${buttonStyles.borderRadius}px;
+            margin: ${buttonStyles.margin}px;
+            padding: ${buttonStyles.paddingY}px ${buttonStyles.paddingX}px;
+            font-size: ${buttonStyles.fontSize}px;
+            color: ${buttonStyles.fontColor};
+            font-family: ${buttonStyles.fontFamily};
+        `;
+
+        navigator.clipboard.writeText(cssCode);
+        setCodeCopied(true);
+        setTimeout(() => setCodeCopied(false), 3000); // Reset copied state after 3 seconds
+    };
+
     return (
-        <div className='flex justify-center gap-80 pt-3'>
-            <div className="w-full max-w-xs bg-gray-500 p-5 rounded-sm">
+        <div className='flex justify-center gap-48 pt-3'>
+            <div className="w-full max-w-xl bg-gray-500 p-5 rounded-sm">
                 <h1 className='flex justify-center font-bold pb-5 text-3xl'>Playground</h1>
                 <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
                     <div className="mb-4">
@@ -239,7 +256,7 @@ const Button = () => {
                     </button>
                 </div>
             </div>
-            <div className='w-full max-w-xs bg-gray-500 rounded-sm'>
+            <div className='w-full max-w-xl bg-gray-500 rounded-sm p-5'>
                 <h1 className='flex justify-center font-bold p-5 text-3xl'>Rendered Button</h1>
                 <div className='flex justify-center'>
                     <button
@@ -254,6 +271,26 @@ const Button = () => {
                         }}
                     >
                         {buttonStyles.text}
+                    </button>
+                </div>
+                <div className="bg-white rounded-sm p-3 mt-5 relative">
+                    <pre className="text-sm font-mono whitespace-pre-wrap">
+                        {`
+                            background-color: ${buttonStyles.backgroundColor};
+                            border-radius: ${buttonStyles.borderRadius}px;
+                            margin: ${buttonStyles.margin}px;
+                            padding: ${buttonStyles.paddingY}px ${buttonStyles.paddingX}px;
+                            font-size: ${buttonStyles.fontSize}px;
+                            color: ${buttonStyles.fontColor};
+                            font-family: ${buttonStyles.fontFamily};
+                        `}
+                    </pre>
+                    {/* Copy button */}
+                    <button
+                        onClick={copyToClipboard}
+                        className="absolute top-2 right-2 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-1 px-2 rounded"
+                    >
+                        {codeCopied ? 'Copied!' : 'Copy'}
                     </button>
                 </div>
             </div>
